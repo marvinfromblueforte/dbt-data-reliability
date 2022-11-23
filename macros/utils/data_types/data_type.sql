@@ -10,6 +10,9 @@
     BOOL
 {% endmacro %}
 
+{% macro sqlserver__type_bool() %}
+    BIT
+{% endmacro %}
 
 {%- macro type_string() -%}
     {{ return(adapter.dispatch('type_string', 'elementary')()) }}

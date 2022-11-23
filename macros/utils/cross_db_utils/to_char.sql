@@ -18,3 +18,7 @@
 {% macro spark__to_char(column, format) %}
     date_format({{ column }} {%- if format %}, '{{ format }}'){%- else %}, 'YYYY-MM-DD HH:MI:SS'){%- endif %}
 {% endmacro %}
+
+{% macro sqlserver__to_char(column, format) %}
+    format({{ column }} {%- if format %}, '{{ format }}'){%- else %}, 'YYYY-MM-DD HH:MI:SS'){%- endif %}
+{% endmacro %}

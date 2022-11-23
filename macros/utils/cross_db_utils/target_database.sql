@@ -17,3 +17,8 @@
     {% set database = target.project %}
     {{ return(database) }}
 {% endmacro %}
+
+{% macro sqlserver__target_database() %}
+    {% set database = target.database %}
+    {{ return(database) }}
+{% endmacro %}
