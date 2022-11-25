@@ -42,7 +42,7 @@
 
     columns_snapshot_with_id as (
 
-        select
+        select distinct
             {{ dbt_utils.surrogate_key([
               'full_table_name',
               'column_name',
@@ -55,7 +55,6 @@
             is_new,
             detected_at
         from columns_snapshot
-        group by 1,2,3,4,5,6,7
 
     )
 

@@ -170,11 +170,10 @@
     {%- set max_bucket_end = "'"~ elementary.get_run_started_at().strftime("%Y-%m-%d 00:00:00")~"'" %}
     {% set alerts_relation = get_alerts_table_relation('alerts_anomaly_detection') %}
     {% set any_type_column_alerts %}
-        select column_name, sub_type
+        select distinct column_name, sub_type
         from {{ alerts_relation }}
             where detected_at >= {{ max_bucket_end }} and upper(table_name) = 'ANY_TYPE_COLUMN_ANOMALIES'
                   and column_name is not NULL
-            group by 1,2
     {% endset %}
     {% set alert_rows = run_query(any_type_column_alerts) %}
     {% set indexed_columns = {} %}
@@ -222,11 +221,10 @@
 
     {# Validating any column anomaly with no timestamp #}
     {% set no_timestamp_column_validation_alerts %}
-        select column_name, sub_type
+        select distinct column_name, sub_type
         from {{ alerts_relation }}
             where detected_at >= {{ max_bucket_end }} and upper(table_name) = 'NO_TIMESTAMP_ANOMALIES'
                   and column_name is not NULL
-            group by 1,2
     {% endset %}
     {% set alert_rows = run_query(no_timestamp_column_validation_alerts) %}
     {% set indexed_columns = {} %}
@@ -302,10 +300,9 @@
     {%- set max_bucket_end = "'"~ elementary.get_run_started_at().strftime("%Y-%m-%d 00:00:00")~"'" %}
     {% set alerts_relation = get_alerts_table_relation('alerts_schema_changes') %}
     {% set schema_changes_alerts %}
-    select column_name, sub_type
+    select distinct column_name, sub_type
     from {{ alerts_relation }}
         where detected_at >= {{ max_bucket_end }} and column_name is not NULL
-    group by 1,2
     {% endset %}
     {% set alert_rows = run_query(schema_changes_alerts) %}
     {% set found_schema_changes = {} %}
@@ -342,10 +339,9 @@
     {%- set max_bucket_end = "'"~ elementary.get_run_started_at().strftime("%Y-%m-%d 00:00:00")~"'" %}
     {% set alerts_relation = get_alerts_table_relation('alerts_dbt_tests') %}
     {% set dbt_test_alerts %}
-        select table_name, column_name, test_name
+        select distinct table_name, column_name, test_name
         from {{ alerts_relation }}
             where detected_at >= {{ max_bucket_end }}
-        group by 1, 2, 3
     {% endset %}
     {% set alert_rows = run_query(dbt_test_alerts) %}
     {% set found_tables = [] %}

@@ -30,7 +30,7 @@
                        0
                    else {{ elementary.cast_as_float(elementary.row_count()) }} end as row_count_value
             from daily_buckets left join filtered_monitored_table on (edr_daily_bucket = start_bucket_in_data)
-            group by 1,2
+            group by edr_daily_bucket, start_bucket_in_data
         ),
 
         row_count as (
@@ -61,7 +61,7 @@
                 {{ elementary.timediff('second', elementary.cast_as_timestamp('max('~freshness_column~')'), elementary.timeadd('day','1','edr_daily_bucket')) }} as metric_value
             from daily_buckets, {{ monitored_table_relation }}
             where {{ elementary.cast_as_timestamp(timestamp_column) }} <= {{ elementary.timeadd('day','1','edr_daily_bucket') }}
-            group by 1,2
+            group by edr_daily_bucket, {{ elementary.const_as_string('freshness') }}
         {%- else %}
             {{ elementary.empty_table([('edr_bucket','timestamp'),('metric_name','string'),('source_value','string'),('metric_value','int')]) }}
         {%- endif %}
@@ -100,7 +100,7 @@
                     {{ elementary.const_as_string('row_count') }} as metric_name,
                     {{ elementary.row_count() }} as metric_value
                 from {{ monitored_table_relation }}
-                group by 1
+                group by {{ elementary.const_as_string('row_count') }}
             {%- else %}
                 {{ elementary.empty_table([('metric_name','string'),('metric_value','int')]) }}
             {%- endif %}

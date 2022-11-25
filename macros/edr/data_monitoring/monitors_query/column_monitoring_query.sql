@@ -44,7 +44,7 @@
                     {%- if 'missing_count' in column_monitors -%} {{ elementary.missing_count(column) }} {%- else -%} null {% endif %} as missing_count,
                     {%- if 'missing_percent' in column_monitors -%} {{ elementary.missing_percent(column) }} {%- else -%} null {% endif %} as missing_percent
                 from filtered_monitored_table
-                group by 1,2
+                group by edr_bucket, {{ elementary.const_as_string(column_obj.name) }}
         {%- else %}
             {{ elementary.empty_column_monitors_cte() }}
         {%- endif %}

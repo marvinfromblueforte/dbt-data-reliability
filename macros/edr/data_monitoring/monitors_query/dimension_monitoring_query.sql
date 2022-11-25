@@ -30,7 +30,7 @@
                 and metric_name = {{ "'" ~ metric_name ~ "'" }}
                 and dimension = {{ "'" ~ dimensions_string ~ "'" }}
                 and {{ elementary.cast_as_timestamp('bucket_end') }} >= {{ elementary.cast_as_timestamp(min_bucket_start) }}
-            group by 1
+            group by dimension_value
             having sum(metric_value) > 0
         ),
 
@@ -152,11 +152,11 @@
             where dimension_value in (
                 select dimension_value
                 from (
-                    select distinct 
+                    select  
                         dimension_value,
                         sum(metric_value)
                     from last_dimension_metrics
-                    group by 1
+                    group by dimension_value
                     having sum(metric_value) > 0
                 )
             )

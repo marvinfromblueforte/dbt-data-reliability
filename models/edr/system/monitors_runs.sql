@@ -18,7 +18,7 @@ max_bucket_end as (
            metric_name,
            max(bucket_end) as last_bucket_end
     from data_monitoring_metrics
-    group by 1,2,3
+    group by full_table_name, column_name, metric_name
 
 )
 
