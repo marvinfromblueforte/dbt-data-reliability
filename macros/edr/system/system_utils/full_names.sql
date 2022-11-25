@@ -1,18 +1,40 @@
-{% macro full_table_name(alias) -%}
+{% macro full_table_name(alias) %}
+    {{ adapter.dispatch('full_table_name','elementary')(alias) }}
+{% endmacro %}
+
+{% macro default__full_table_name(alias) -%}
     {% if alias is defined %}{%- set alias_dot = alias ~ '.' %}{% endif %}
     upper({{ alias_dot }}database_name || '.' || {{ alias_dot }}schema_name || '.' || {{ alias_dot }}table_name)
 {%- endmacro %}
 
+{% macro sqlserver__full_table_name(alias) -%}
+    {% if alias is defined %}{%- set alias_dot = alias ~ '.' %}{% endif %}
+    upper({{ alias_dot }}database_name + '.' + {{ alias_dot }}schema_name + '.' + {{ alias_dot }}table_name)
+{%- endmacro %}
 
-{% macro full_schema_name() -%}
+{% macro full_schema_name() %}
+    {{ adapter.dispatch('full_schema_name','elementary')() }}
+{% endmacro %}
+
+{% macro default__full_schema_name() -%}
     upper(database_name || '.' || schema_name)
 {%- endmacro %}
 
+{% macro sqlserver__full_schema_name() -%}
+    upper(database_name + '.' + schema_name)
+{%- endmacro %}
 
-{% macro full_column_name() -%}
+{% macro full_column_name() %}
+    {{ adapter.dispatch('full_column_name','elementary')() }}
+{% endmacro %}
+
+{% macro default__full_column_name() -%}
     upper(database_name || '.' || schema_name || '.' || table_name || '.' || column_name)
 {%- endmacro %}
 
+{% macro sqlserver__full_column_name() -%}
+    upper(database_name + '.' + schema_name + '.' + table_name + '.' + column_name)
+{%- endmacro %}
 
 {% macro split_full_table_name_to_vars(full_table_name) %}
     {% set split_full_table_name = full_table_name.split('.') %}
