@@ -105,7 +105,7 @@
 {%- endmacro -%}
 
 {% macro render_value(value) %}
-    {{ adapter.dispatch('render_value','elementary')(value) }}
+    {{ return(adapter.dispatch('render_value','elementary')(value)) }}
 {% endmacro %}
 
 {%- macro default__render_value(value) -%}
@@ -127,16 +127,12 @@
 {%- macro sqlserver__render_value(value) -%}
     {%- if value is defined and value is not none -%}
         {%- if value is boolean -%}
-            {{ log("boolean is " ~ value) }}
             {{- 1 if value else 0 -}}
         {%- elif value is number -%}
-            {{ log("number is " ~ value) }}
             {{- value -}}
         {%- elif value is string -%}
-            {{ log("string is " ~ value) }}
             '{{- elementary.escape_special_chars(value) -}}'
         {%- elif value is mapping or value is sequence -%}
-            {{ log("mapping or sequence is " ~ value) }}
             '{{- elementary.escape_special_chars(tojson(value)) -}}'
         {%- else -%}
             NULL

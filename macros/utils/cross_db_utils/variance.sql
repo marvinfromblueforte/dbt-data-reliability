@@ -7,6 +7,6 @@
 {% endmacro %}
 
 {% macro sqlserver__variance(column_name) %}
-    stdev(cast({{ column_name }} as {{ elementary.type_float() }}))
+    variance(cast({{ column_name }} as {{ elementary.type_float() }}))
 {% endmacro %}
 
