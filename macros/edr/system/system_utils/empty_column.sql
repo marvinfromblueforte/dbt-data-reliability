@@ -1,9 +1,9 @@
 {% macro empty_column(column_name, data_type) %}
-    {{ adapter.dispatch('empty_column','elementary')(column_name, data_type) }}
+    {{ return(adapter.dispatch('empty_column','elementary')(column_name, data_type)) }}
 {% endmacro %}
 
 
-{% macro default__empty_column(column_name, data_type) %}
+{% macro default__empty_column(column_name, data_type) -%}
 
     {%- set dummy_values = elementary.dummy_values() %}
 
@@ -23,9 +23,9 @@
         cast('{{ dummy_values['string'] }}' as {{ elementary.type_string() }}) as {{ column_name }}
     {%- endif %}
 
-{% endmacro %}
+{%- endmacro %}
 
-{% macro sqlserver__empty_column(column_name, data_type) %}
+{% macro sqlserver__empty_column(column_name, data_type) -%}
 
     {%- set dummy_values = elementary.dummy_values() %}
 
@@ -45,4 +45,4 @@
         cast('{{ dummy_values['string'] }}' as {{ elementary.type_string() }}) as {{ column_name }}
     {%- endif %}
 
-{% endmacro %}
+{%- endmacro %}

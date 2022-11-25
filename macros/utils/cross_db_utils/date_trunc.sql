@@ -2,6 +2,6 @@
     {% if dbt_version >= '1.2.0' %}
         {{ return(dbt.date_trunc(datepart, date)) }}
     {% else %}
-        {{ return(dbt_utils.date_trunc(datepart, date)) }}
+        {{ return(adapter.dispatch('datepart', 'dbt_utils')(datepart, date)) }}
     {% endif %}
 {% endmacro %}

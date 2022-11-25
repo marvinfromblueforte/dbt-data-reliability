@@ -1,4 +1,4 @@
-{% macro current_timestamp() %}
+{% macro current_timestamp() -%}
     {% if dbt_version >= '1.2.0' %}
         {# This macro is depricated from dbt_utils version 0.9.0, but still hasn't got an equivalent macro at dbt-core #}
         {# Should be replaced to the equivalent macro once it released #}
@@ -6,7 +6,7 @@
     {% else %}
         {{ return(adapter.dispatch('current_timestamp', 'dbt_utils')) }}
     {% endif %}
-{% endmacro %}
+{%- endmacro %}
 
 {% macro current_timestamp_in_utc() %}
     {{ return(adapter.dispatch('current_timestamp_in_utc','elementary')()) }}
