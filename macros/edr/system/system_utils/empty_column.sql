@@ -30,11 +30,7 @@
     {%- set dummy_values = elementary.dummy_values() %}
 
     {%- if data_type == 'boolean' %}
-        {%- if dummy_values['boolean'] %}
-            cast (1 as {{ elementary.type_bool()}}) as {{ column_name }}
-        {%- else %}
-            cast (0 as {{ elementary.type_bool()}}) as {{ column_name }}
-        {%- endif %}
+        cast ({{ 1 if dummy_values['boolean'] else 0 }} as {{ elementary.type_bool()}}) as {{ column_name }}
     {%- elif data_type == 'timestamp' -%}
         cast('{{ dummy_values['timestamp'] }}' as {{ elementary.type_timestamp() }}) as {{ column_name }}
     {%- elif data_type == 'int' %}

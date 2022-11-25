@@ -1,5 +1,5 @@
 {% macro full_table_name(alias) %}
-    {{ adapter.dispatch('full_table_name','elementary')(alias) }}
+    {{ return(adapter.dispatch('full_table_name','elementary')(alias)) }}
 {% endmacro %}
 
 {% macro default__full_table_name(alias) -%}
@@ -13,7 +13,7 @@
 {%- endmacro %}
 
 {% macro full_schema_name() %}
-    {{ adapter.dispatch('full_schema_name','elementary')() }}
+    {{ return(adapter.dispatch('full_schema_name','elementary')()) }}
 {% endmacro %}
 
 {% macro default__full_schema_name() -%}
@@ -25,7 +25,7 @@
 {%- endmacro %}
 
 {% macro full_column_name() %}
-    {{ adapter.dispatch('full_column_name','elementary')() }}
+    {{ return(adapter.dispatch('full_column_name','elementary')()) }}
 {% endmacro %}
 
 {% macro default__full_column_name() -%}
