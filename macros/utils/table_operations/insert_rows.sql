@@ -92,9 +92,9 @@
     {{ return(insert_rows_query) }}
 {%- endmacro %}
 
-{% macro escape_special_chars(string_value) %}
-    {{ adapter.dispatch('escape_special_chars','elementary')(string_value) }}
-{% endmacro %}
+{%- macro escape_special_chars(string_value) -%}
+    {{- adapter.dispatch('escape_special_chars','elementary')(string_value) -}}
+{%- endmacro -%}
 
 {%- macro default__escape_special_chars(string_value) -%}
     {{- return(string_value | replace("\\", "\\\\") | replace("'", "\\'") | replace("\n", "\\n") | replace("\r", "\\r")) -}}
@@ -104,13 +104,39 @@
     {{- return(string_value | replace("'", "''")) -}}
 {%- endmacro -%}
 
-{%- macro render_value(value) -%}
+{% macro render_value(value) %}
+    {{ adapter.dispatch('render_value','elementary')(value) }}
+{% endmacro %}
+
+{%- macro default__render_value(value) -%}
     {%- if value is defined and value is not none -%}
         {%- if value is number -%}
             {{- value -}}
         {%- elif value is string -%}
             '{{- elementary.escape_special_chars(value) -}}'
         {%- elif value is mapping or value is sequence -%}
+            '{{- elementary.escape_special_chars(tojson(value)) -}}'
+        {%- else -%}
+            NULL
+        {%- endif -%}
+    {%- else -%}
+        NULL
+    {%- endif -%}
+{%- endmacro -%}
+
+{%- macro sqlserver__render_value(value) -%}
+    {%- if value is defined and value is not none -%}
+        {%- if value is boolean -%}
+            {{ log("boolean is " ~ value) }}
+            {{- 1 if value else 0 -}}
+        {%- elif value is number -%}
+            {{ log("number is " ~ value) }}
+            {{- value -}}
+        {%- elif value is string -%}
+            {{ log("string is " ~ value) }}
+            '{{- elementary.escape_special_chars(value) -}}'
+        {%- elif value is mapping or value is sequence -%}
+            {{ log("mapping or sequence is " ~ value) }}
             '{{- elementary.escape_special_chars(tojson(value)) -}}'
         {%- else -%}
             NULL
