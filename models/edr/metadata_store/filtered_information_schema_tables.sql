@@ -1,9 +1,10 @@
 {{
   config(
     materialized = 'view',
-    enabled = target.type != 'databricks' and target.type != 'spark' and target.type != 'sqlserver' | as_bool()
+    enabled = false
   )
 }}
+
 
 {% set configured_schemas = elementary.get_configured_schemas_from_graph() %}
 
